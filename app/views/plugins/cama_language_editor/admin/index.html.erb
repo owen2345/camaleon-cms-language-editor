@@ -1,0 +1,83 @@
+<%= form_tag url_for(action: :index), id: 'yml_editor_plugin_btns', class: 'row' do %>
+    <div class="col-md-4">
+        <label>File 1</label>
+        <%= select_tag 'file1', options_for_select(PluginRoutes.all_enabled_apps.map{|ap| ap['path'].present? ? Dir[File.join(ap['path'], 'config', 'locales', '*.yml')] : [] }.flatten, params[:file1]), class: 'form-control'  %>
+    </div>
+    <div class="col-md-4">
+        <label>File 2</label>
+        <%= select_tag 'file2', options_for_select(PluginRoutes.all_enabled_apps.map{|ap| ap['path'].present? ? Dir[File.join(ap['path'], 'config', 'locales', '*.yml')] : [] }.flatten, params[:file2]), class: 'form-control'  %>
+    </div>
+    <div class="col-md-4">
+        <br>
+        <%= submit_tag 'Compare', confirm: 'Are you sure?', class: 'btn btn-default' %>
+        <button type="button" class="btn btn-primary mode_copy">Copy Mode</button>
+    </div>
+<% end %>
+<br>
+<style>
+    #yml_editor_plugin > div{
+        width: 50%;
+        float: left;
+        display: inline;
+    }
+    #yml_editor_plugin li{
+        list-style: circle;
+        padding-left: 20px;
+        border-right: none;
+        padding-right: 0;
+    }
+</style>
+<% if params[:file1].present? && params[:file2].present? %>
+    <div id="yml_editor_plugin" style="white-space: nowrap;">
+        <%
+            yml1 = YAML.load(File.read(params[:file1])) rescue {}
+            key1 = yml1.keys.first
+            yml1 = yml1[key1] rescue {}
+
+            yml2 = YAML.load(File.read(params[:file2])) rescue {}
+            key2 = yml2.keys.first
+            yml2 = yml2[key2] rescue {}
+
+            res1, res2 = cama_language_render_item_yml(yml1.keys + yml2.keys, [], yml1, yml2)
+        %>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4><%= key1 %></h4>
+            </div>
+            <div class="panel-body">
+                <ul id="owen">
+                    <%= raw res1  %>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4><%= key2 %></h4>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <%= raw res2 %>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        jQuery(function(){
+            var panel = $('#yml_editor_plugin')
+            $('#yml_editor_plugin_btns .mode_copy').click(function(){
+                var btn = $(this);
+                var edit_mode = btn.hasClass('is_edit_mode');
+                if(edit_mode) btn.removeClass('is_edit_mode');
+                else btn.addClass('is_edit_mode');
+                panel.find('input').each(function(){
+                    if(edit_mode){
+                        $(this).show().next().remove();
+                    }else{
+                        $(this).hide().after("<span class='input-group-addon'><small>\""+$(this).val()+"\"</small></span>");
+                    }
+                });
+            });
+        });
+    </script>
+<% end %>

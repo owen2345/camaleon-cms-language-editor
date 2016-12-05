@@ -1,0 +1,18 @@
+{
+  "title": "Cama Language Editor",
+  "descr": "",
+  "key": "cama_language_editor",
+  "helpers": [
+    "Plugins::CamaLanguageEditor::MainHelper"
+  ],
+  "hooks": {
+    "on_active": [
+      "cama_language_editor_on_active"
+    ],
+    "on_inactive": [
+      "cama_language_editor_on_inactive"
+    ],
+    "plugin_options": ["cama_language_plugin_options"]
+    //here you can add all your hooks (read documentation)
+  }
+}
