@@ -21,7 +21,7 @@ module Plugins::CamaLanguageEditor::MainHelper
   end
 
   def cama_language_plugin_options(args)
-    args[:links] << link_to('Start Compare', admin_plugins_cama_language_editor_index_url)
+    args[:links] << link_to('Access to Editor', admin_plugins_cama_language_editor_index_url)
   end
 
   def cama_language_render_item_translations(groups, base_key = nil, res = [], p_keys = [])

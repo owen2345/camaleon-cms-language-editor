@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Owen Peredo"]
   s.email       = ["owenperedo@gmail.com"]
   s.homepage    = ""
-  s.summary     = ": Summary of CamaLanguageEditor."
-  s.description = ": Description of CamaLanguageEditor."
+  s.summary     = "This plugin permit to verify and complete missing translations. Also it is used to create another clean language."
+  s.description = "This plugin permit to verify and complete missing translations. Also it is used to create another clean language."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
