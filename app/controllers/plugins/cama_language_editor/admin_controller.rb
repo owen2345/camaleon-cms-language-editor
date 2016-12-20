@@ -1,6 +1,6 @@
 class Plugins::CamaLanguageEditor::AdminController < CamaleonCms::Apps::PluginsAdminController
   include Plugins::CamaLanguageEditor::MainHelper
-  breadcrumb_add('Translations Editor')
+  add_breadcrumb('Translations Editor')
   def index
     # actions for admin panel
   end

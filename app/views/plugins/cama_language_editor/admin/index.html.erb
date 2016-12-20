@@ -1,53 +1,55 @@
 <% params[:prefix] = 'camaleon_cms' unless params[:prefix].present? %>
-<% params[:left_column] ||= 'en' %>
-<% params[:right_column] ||= 'es' %>
+<% params[:languages] ||= ['es', 'en'] %>
 <%= stylesheet_link_tag(plugin_asset_path('admin')) %>
 <%= javascript_include_tag(plugin_asset_path('admin')) %>
-<% languages = [params[:left_column], params[:right_column]] %>
+<% languages = params[:languages] %>
 
-<% r = cama_language_render_item_translations(languages.map{|_l| cama_language_get_hash_value(I18n.backend.send(:translations)[_l.to_sym], params[:prefix].split(":")) || {} }, params[:prefix]) %>
-<%= form_tag url_for(action: :index), id: 'translations_editor_form', method: :get, class: 'row' do %>
-    <div class="col-md-6">
-        <div class="row">
-            <div class="col-md-6">
-                <label>Left Column</label><br>
-                <%= select_tag :left_column, options_for_select(PluginRoutes.static_system_info['available_languages'], params[:left_column]), class: 'form-control' %>
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>Translations Editor</h4></div>
+    <div class="panel-body">
+        <% r = cama_language_plugin_render_item_translations(languages.map{|_l| cama_language_plugin_get_hash_value(I18n.backend.send(:translations)[_l.to_sym], params[:prefix].split(":")) || {} }, params[:prefix]) %>
+        <%= form_tag url_for(action: :index), id: 'translations_editor_form', method: :get, class: 'row' do %>
+            <div class="col-md-3">
+                <label>Languages</label><br>
+                <%= select_tag :languages, options_for_select(PluginRoutes.static_system_info['available_languages'], params[:languages]), class: 'form-control required multiselect', multiple: true %>
             </div>
-
             <div class="col-md-6">
-                <label>Right Column</label><br>
-                <%= select_tag :right_column, options_for_select(PluginRoutes.static_system_info['available_languages'], params[:right_column]), class: 'form-control' %>
-            </div>
-        </div>
-
-    </div>
-    <div class="col-md-6">
-        <small>Enter your prefix to filter specific translations, sample: plugins:ecommerce | camaleon_cms:admin</small>
-        <br>
-        <div class="input-group">
-            <span class="input-group-addon">Prefix</span>
-            <%= text_field_tag 'prefix', params[:prefix], class: 'form-control' %>
-            <span class="input-group-btn">
+                <small>Enter your prefix to filter specific translations, sample: plugins:ecommerce | camaleon_cms:admin</small>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon">Prefix</span>
+                    <%= text_field_tag 'prefix', params[:prefix], class: 'form-control' %>
+                    <span class="input-group-btn">
                 <button class="btn btn-secondary" type="submit">Load Translations</button>
                 <button type="button" class="btn btn-primary mode_copy">Copy Mode</button>
             </span>
-        </div>
-    </div>
-<% end %>
-<hr>
-
-<div class="clearfix"></div>
-<div id="translations_editor_table" class="row">
-    <% r.each_with_index do |g, index|  %>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h4><%= languages[index] %>:<%= params[:prefix] %>:</h4></div>
-                <div class="panel-body translation_column tree">
-                    <ul>
-                        <%= raw g %>
-                    </ul>
                 </div>
             </div>
+        <% end %>
+        <hr>
+
+        <div class="clearfix"></div>
+        <div class="translations_editor_table_w" style="overflow: auto;">
+            <div id="translations_editor_table" style="white-space: nowrap;">
+                <% r.each_with_index do |g, index|  %>
+                    <div class="item" style="width: 550px; float: left;">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><h4><%= languages[index] %>:<%= params[:prefix] %>:</h4></div>
+                            <div class="panel-body translation_column tree">
+                                <ul>
+                                    <%= raw g %>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
         </div>
-    <% end %>
+        <script type="application/javascript">
+            jQuery(function(){
+                $('#translations_editor_table').width(<%= (r.length * 552) %>);
+                $('#translations_editor_form select.multiselect').selectpicker()
+            })
+        </script>
+    </div>
 </div>
