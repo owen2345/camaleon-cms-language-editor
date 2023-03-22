@@ -4,10 +4,36 @@ This is a Camaleon CMS plugin which permit to verify, overwrite and complete mis
 
 ## Installation
 * Add to your gemfile
-```
-gem 'cama_language_editor'
-```
+    ```
+    gem 'cama_language_editor'
+    ```
+  * _Note:_ you can add this gem to the development group, if you don't need it in production and test groups:
+    ```
+    gem 'cama_language_editor', groups: [:development]
+    ```
 * bundle install
+* If the main app is using Sprockets 4.x, add these to lines either to the main manifest.js file,
+    ```
+    # config/manifest.js
+    
+    //= link plugins/cama_language_editor/admin.css
+    //= link plugins/cama_language_editor/admin.js
+    
+    ```
+  * If you specified in the Gemfile the gem to be added only to `development` group, you have to create a separate
+   manifest file:
+    ```
+    # config/manifest_dev.js
+    
+    //= link plugins/cama_language_editor/admin.css
+    //= link plugins/cama_language_editor/admin.js    
+    
+    ```
+    and add it to the assets initializer to be precompiled only in the `development` environment:
+    ```
+    Rails.application.config.assets.precompile += %w( manifest_dev.js ) if Rails.env.development?
+
+    ```
 * Restart server
 * Active the plugin on admin -> Plugins -> Cama Language Editor
 
